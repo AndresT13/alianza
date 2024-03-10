@@ -3,6 +3,8 @@ package com.alianza.prueba.Mappers;
 import com.alianza.prueba.model.dto.ClientDto;
 import com.alianza.prueba.model.entities.ClientEntity;
 
+import java.time.LocalDateTime;
+
 public interface MappersObjectsClients {
 
     public static ClientDto clientEntityToClientDto(ClientEntity clientEntity){

@@ -7,8 +7,10 @@ import com.alianza.prueba.repository.ClientDao;
 import com.alianza.prueba.services.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,31 +23,39 @@ public class IClientServiceImpl implements IClientService {
         this.clientRepository = clientRepository;
     }
 
+
     @Override
-    public ClientDto findBySharedKey(String id) {
-        Optional<ClientEntity> entity = clientRepository.findById(id);
+    public List<ClientDto> findAll() {
+        List<ClientEntity> clienttEntityList = clientRepository.findAll();
+        List<ClientDto> clientDtoList = new ArrayList<>();
+
+        for (ClientEntity entity : clienttEntityList) {
+            clientDtoList.add(MappersObjectsClients.clientEntityToClientDto(entity));
+        }
+        return clientDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ClientDto getSharedKey(String sharedKey) {
+        Optional<ClientEntity> clientEntity = clientRepository.findBySharedKey(sharedKey);
         ClientDto clientDto = null;
 
-        if(entity.isPresent())
-            clientDto = MappersObjectsClients.clientEntityToClientDto(entity.get());
-
+        if (clientEntity.isPresent())
+            clientDto = MappersObjectsClients.clientEntityToClientDto(clientEntity.get());
         return clientDto;
+
     }
 
     @Override
     public ClientDto save(ClientDto clientDto) {
-        Optional<ClientEntity> entity = clientRepository.findById(clientDto.getSharedKey());
-        ClientEntity clientEntity = null;
+        Optional<ClientEntity> entity = clientRepository.findBySharedKey(clientDto.getSharedKey());
+        ClientEntity client = null;
         if(!entity.isPresent()){
-            clientEntity = clientRepository.save(MappersObjectsClients.clientDtoToClientEntity(clientDto));
+            client = clientRepository.save(MappersObjectsClients.clientDtoToClientEntity(clientDto));
         }
-        return MappersObjectsClients.clientEntityToClientDto(clientEntity);
+        return MappersObjectsClients.clientEntityToClientDto(client);
 
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return clientRepository.existsById(id);
     }
 
 
