@@ -17,7 +17,7 @@ import java.util.Date;
 @ToString
 public class ClientDto   implements Serializable{
 
-
+    private Long id;
     private String sharedKey;
     private String name;
     private String phone;

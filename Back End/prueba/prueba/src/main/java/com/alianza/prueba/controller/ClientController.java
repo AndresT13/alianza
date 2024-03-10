@@ -3,11 +3,15 @@ package com.alianza.prueba.controller;
 import com.alianza.prueba.exception.BadRequestException;
 import com.alianza.prueba.exception.ResourceNotFoundException;
 import com.alianza.prueba.model.dto.ClientDto;
+import com.alianza.prueba.model.entities.ClientEntity;
 import com.alianza.prueba.model.payload.MessageResponse;
 import com.alianza.prueba.services.IClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +72,12 @@ public class ClientController {
                                 .build())
                         .build()
                 , HttpStatus.OK);
+    }
+
+    @GetMapping("/clients/page/{page}")
+    public Page<ClientEntity> index(@PathVariable Integer page) {
+        Pageable pageable = PageRequest.of(page, 4);
+        return clientService.findAll(pageable);
     }
 
     @RequestMapping(path = "/client/create" , method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)

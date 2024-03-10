@@ -6,6 +6,8 @@ import com.alianza.prueba.model.entities.ClientEntity;
 import com.alianza.prueba.repository.ClientDao;
 import com.alianza.prueba.services.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,11 @@ public class IClientServiceImpl implements IClientService {
         }
         return MappersObjectsClients.clientEntityToClientDto(client);
 
+    }
+
+    @Override
+    public Page<ClientEntity> findAll(Pageable pageable) {
+        return clientRepository.findAll(pageable);
     }
 
 
